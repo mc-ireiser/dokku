@@ -27,8 +27,9 @@ func main() {
 	if info, _ := os.Stat(cacheDir); info != nil && info.IsDir() {
 		purgeCacheCmd := common.NewShellCmd(strings.Join([]string{
 			common.DockerBin(),
+			"container",
 			"run --rm", dokkuGlobalRunArgs,
-			"-v", strings.Join([]string{cacheHostDir, ":/cache"}, ""), image,
+			"--volume", strings.Join([]string{cacheHostDir, ":/cache"}, ""), image,
 			`find /cache -depth -mindepth 1 -maxdepth 1 -exec rm -Rf {} ;`}, " "))
 		purgeCacheCmd.Execute()
 		err := os.MkdirAll(cacheDir, 0644)

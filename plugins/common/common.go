@@ -136,7 +136,7 @@ func DirectoryExists(filePath string) bool {
 
 // DockerInspect runs an inspect command with a given format against a container id
 func DockerInspect(containerID, format string) (output string, err error) {
-	b, err := sh.Command(DockerBin(), "inspect", "--format", format, containerID).Output()
+	b, err := sh.Command(DockerBin(), "container", "inspect", "--format", format, containerID).Output()
 	if err != nil {
 		return "", err
 	}
@@ -253,7 +253,7 @@ func IsImageHerokuishBased(image string) bool {
 	}
 
 	dockerGlobalArgs := os.Getenv("DOKKU_GLOBAL_RUN_ARGS")
-	parts := []string{DockerBin(), "run", dockerGlobalArgs, "--entrypoint=\"/bin/sh\"", dockerArgs, image, "-c", "\"test -f /exec\""}
+	parts := []string{DockerBin(), "container", "run", dockerGlobalArgs, "--entrypoint=\"/bin/sh\"", dockerArgs, image, "-c", "\"test -f /exec\""}
 
 	var dockerCmdParts []string
 	for _, str := range parts {
@@ -339,7 +339,7 @@ func VerifyAppName(appName string) (err error) {
 
 // VerifyImage returns true if docker image exists in local repo
 func VerifyImage(image string) bool {
-	imageCmd := NewShellCmd(strings.Join([]string{DockerBin(), "inspect", image}, " "))
+	imageCmd := NewShellCmd(strings.Join([]string{DockerBin(), "image", "inspect", image}, " "))
 	imageCmd.ShowOutput = false
 	return imageCmd.Execute()
 }
